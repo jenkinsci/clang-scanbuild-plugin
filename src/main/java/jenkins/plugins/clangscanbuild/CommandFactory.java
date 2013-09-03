@@ -7,13 +7,20 @@ import jenkins.plugins.clangscanbuild.commands.ScanMakeBuildCommand;
 
 public final class CommandFactory {
 
-	public static Command get(String cmd){
+	private static final String[] toolchains = {"XCode", "make", "CMake"};
 	
-		if (cmd.startsWith("make"))
+	public static Command get(String cmd){
+
+		System.err.println("Using build command " + cmd);
+		if (cmd.toLowerCase().startsWith("make"))
 			return new ScanMakeBuildCommand();
-		if (cmd.startsWith("cmake"))
+		if (cmd.toLowerCase().startsWith("cmake"))
 			return new ScanCMakeBuildCommand();
 		
 		return new ScanBuildCommand();
+	}
+	
+	public static String[] getToolchains() {
+		return toolchains;
 	}
 }

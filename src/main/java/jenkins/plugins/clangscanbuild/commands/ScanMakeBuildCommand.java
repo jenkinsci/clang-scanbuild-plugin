@@ -1,5 +1,7 @@
 package jenkins.plugins.clangscanbuild.commands;
 
+import java.io.File;
+
 import hudson.util.ArgumentListBuilder;
 import jenkins.plugins.clangscanbuild.CommandExecutor;
 
@@ -7,13 +9,41 @@ public class ScanMakeBuildCommand extends ScanBasicCommand {
 	
 	public int execute( BuildContext context ) throws Exception {
 
+		File build = new File(getProjectDirectory().toURI());
+		File src = new File(context.getWorkspace().getRemote(), getWorkspace());
+
+		/* Remove old build folder, but only if we build out of tree. */
+		if (!src.equals(build)) {
+			if (build.exists())
+				deleteFolder(build);
+			build.mkdirs();
+		}
+		
+		/* Basic autotools support, run configure before make. */
+		File cfg = new File(getProjectDirectory().getRemote(), "configure");
+		if (cfg.exists()) {
+			ArgumentListBuilder prep = new ArgumentListBuilder();
+			prep.add("./configure");
+			
+			/* TODO: Append configure arguments here. */
+			int rc = context.waitForProcess( getProjectDirectory(), prep );
+
+			if( rc == CommandExecutor.SUCCESS ){
+				context.log( "MAKE SUCCESS" );
+			}else{
+				context.log( "MAKE ERROR" );
+				return rc;
+			}
+		}
+
 		ArgumentListBuilder args = executeCommon(context);
 		args.add( "make" );
 		
-		args.add( "clean" );
+		/* By default clean and build everything. */
 		if( isNotBlank( getTarget() ) ){
-			args.add( getTarget() );
+			args.addTokenized( getTarget() );
 		}else{
+			args.add( "clean" );
 			args.add( "all" );
 		}
 

@@ -13,27 +13,17 @@ public class ScanCMakeBuildCommand extends ScanBasicCommand {
 		return "cmake";
 	}
 
-	private static void deleteFolder(File folder) {
-		File[] files = folder.listFiles();
-		if (files != null) {
-			for (File f : files) {
-				if (f.isDirectory()) {
-					deleteFolder(f);
-				} else {
-					f.delete();
-				}
-			}
-		}
-		folder.delete();
-	}
-
 	public int execute(BuildContext context) throws Exception {
 
-		/* Remove old build folder... */
 		File build = new File(getProjectDirectory().toURI());
-		if (build.exists())
-			deleteFolder(build);
-		build.mkdirs();
+		File src = new File(context.getWorkspace().getRemote(), getWorkspace());
+
+		/* Remove old build folder, but only if we build out of tree. */
+		if (!src.equals(build)) {
+			if (build.exists())
+				deleteFolder(build);
+			build.mkdirs();
+		}
 
 		/* Create the CMake configuration for the target. */
 		ArgumentListBuilder prepargs = new ArgumentListBuilder();
@@ -43,8 +33,6 @@ public class ScanCMakeBuildCommand extends ScanBasicCommand {
 		 * Build the CMake generation string. Use separate add for arguments, as
 		 * they may contain spaces and additional quoting is not desired.
 		 */
-
-		File src = new File(context.getWorkspace().getRemote(), getWorkspace());
 		prepargs.add("-G" + getTargetSdk());
 		prepargs.add("-B" + getProjectDirectory().getRemote());
 		prepargs.add("-H" + src.getAbsolutePath());
