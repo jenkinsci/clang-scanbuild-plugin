@@ -1,5 +1,7 @@
 package jenkins.plugins.clangscanbuild.commands;
 
+import java.util.List;
+
 import hudson.FilePath;
 import hudson.util.ArgumentListBuilder;
 
@@ -36,5 +38,4 @@ public interface BuildContext {
 	 * Logs a message to the build listener.
 	 */
 	public void log( String message );
-	
 }

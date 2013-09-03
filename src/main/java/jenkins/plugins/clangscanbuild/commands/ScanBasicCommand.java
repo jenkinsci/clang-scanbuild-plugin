@@ -1,5 +1,7 @@
 package jenkins.plugins.clangscanbuild.commands;
 
+import java.io.File;
+
 import hudson.FilePath;
 import hudson.util.ArgumentListBuilder;
 
@@ -29,7 +31,7 @@ public abstract class ScanBasicCommand implements Command {
 
 		ArgumentListBuilder args = new ArgumentListBuilder();
 			
-		args.add(getClangScanBuildPath());
+		args.add(getClangScanBuildExecutable());
 
 		args.add("-k"); // keep going on failure
 		args.add("-v"); // verbose
@@ -37,6 +39,7 @@ public abstract class ScanBasicCommand implements Command {
 
 		args.add("-o"); // output folder
 		args.add(escapeSpacesInPath(clangOutputFolder.getRemote()));
+		args.add("--use-analyzer", getClangCompilerExecutable());
 
 		String additionalArgs = getAdditionalScanBuildArguments();
 		if (isNotBlank(additionalArgs)) {
@@ -134,7 +137,21 @@ public abstract class ScanBasicCommand implements Command {
 		return config;
 	}
 
-	public String getClangScanBuildPath() {
+	public String getClangCompilerExecutable() {
+		File base = new File(clangScanBuildPath);
+		File clang = new File(base.getParent(), "clang");
+		
+		return clang.getAbsolutePath();
+	}
+	
+	public String getClangXXCompilerExecutable() {
+		File base = new File(clangScanBuildPath);
+		File clang = new File(base.getParent(), "clang++");
+		
+		return clang.getAbsolutePath();
+	}
+	
+	public String getClangScanBuildExecutable() {
 		return clangScanBuildPath;
 	}
 
