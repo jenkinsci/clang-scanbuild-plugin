@@ -13,7 +13,7 @@ import hudson.tasks.Builder;
 import java.io.IOException;
 
 import jenkins.plugins.clangscanbuild.commands.BuildContextImpl;
-import jenkins.plugins.clangscanbuild.commands.ScanBuildCommand;
+import jenkins.plugins.clangscanbuild.commands.Command;
 
 import org.kohsuke.stapler.DataBoundConstructor;
 
@@ -39,9 +39,10 @@ public class ClangScanBuildBuilder extends Builder{
     private String clangInstallationName;
     private String xcodeProjectSubPath;
     private String workspace;
+    private String buildcommand;
     private String scheme;
     private String scanbuildargs;
-    private String xcodebuildargs;
+    private String buildargs;
 
     @DataBoundConstructor
     public ClangScanBuildBuilder( 
@@ -51,9 +52,10 @@ public class ClangScanBuildBuilder extends Builder{
     		String clangInstallationName,
     		String xcodeProjectSubPath,
     		String workspace,
+    		String buildcommand,
     		String scheme,
     		String scanbuildargs,
-                String xcodebuildargs){
+                String buildargs){
     	
         this.target = Util.fixEmptyAndTrim( target );
         this.targetSdk = Util.fixEmptyAndTrim( targetSdk );
@@ -61,9 +63,10 @@ public class ClangScanBuildBuilder extends Builder{
         this.clangInstallationName = Util.fixEmptyAndTrim( clangInstallationName );
         this.xcodeProjectSubPath = Util.fixEmptyAndTrim( xcodeProjectSubPath );
         this.workspace = Util.fixEmptyAndTrim( workspace );
+        this.buildcommand = Util.fixEmptyAndTrim( buildcommand );
         this.scheme = Util.fixEmptyAndTrim( scheme );
         this.scanbuildargs = Util.fixEmptyAndTrim( scanbuildargs );
-        this.xcodebuildargs = Util.fixEmptyAndTrim( xcodebuildargs );
+        this.buildargs = Util.fixEmptyAndTrim( buildargs );
     }
 
     public String getClangInstallationName(){
@@ -86,6 +89,10 @@ public class ClangScanBuildBuilder extends Builder{
 		return workspace;
 	}
 	
+	public String getBuildcommand(){
+		return buildcommand;
+	}
+	
 	public String getScheme(){
 		return scheme;
 	}
@@ -94,8 +101,8 @@ public class ClangScanBuildBuilder extends Builder{
 		return scanbuildargs;
 	}
 
-        public String getXcodebuildargs(){
-		return xcodebuildargs;
+        public String getBuildargs(){
+		return buildargs;
 	}
 
 	/**
@@ -129,12 +136,12 @@ public class ClangScanBuildBuilder extends Builder{
 		EnvVars env = build.getEnvironment(listener);
 		clangInstallation = clangInstallation.forEnvironment( env );
 		
-		ScanBuildCommand xcodebuild = new ScanBuildCommand();
+		Command xcodebuild = CommandFactory.get(getBuildcommand());
 		xcodebuild.setTarget( getTarget() );
 		xcodebuild.setTargetSdk( getTargetSdk() );
 		xcodebuild.setConfig( getConfig() );
 		xcodebuild.setAdditionalScanBuildArguments( getScanbuildargs() );
-		xcodebuild.setAdditionalXcodeBuildArguments( getXcodebuildargs() );
+		xcodebuild.setAdditionalBuildArguments( getBuildargs() );
 		xcodebuild.setClangOutputFolder( new FilePath( build.getWorkspace(), ClangScanBuildUtils.REPORT_OUTPUT_FOLDERNAME) );
 		xcodebuild.setWorkspace( getWorkspace() );
 		xcodebuild.setScheme( getScheme() );

@@ -111,7 +111,7 @@ public class ScanBuildCommandTest{
 		command.setTarget( "myTarget" );
 		command.setTargetSdk( "myTargetSdk" );
 		command.setWorkspace( "myWorkspace" );
-		command.setAdditionalXcodeBuildArguments("VALID_ARCHS=i386" );
+		command.setAdditionalBuildArguments("VALID_ARCHS=i386" );
 
 		String actual = buildCommandAndReturn( command );
 		
@@ -153,7 +153,7 @@ public class ScanBuildCommandTest{
 		command.setTargetSdk( "myTargetSdk" );
 		command.setWorkspace( "myWorkspace" );
 		command.setAdditionalScanBuildArguments( "-h -x somevalue" );
-                command.setAdditionalXcodeBuildArguments("THIS=1 THAT=2");
+                command.setAdditionalBuildArguments("THIS=1 THAT=2");
 
 		String actual = buildCommandAndReturn( command );
 		

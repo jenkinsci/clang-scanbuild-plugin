@@ -12,7 +12,7 @@ import java.io.PrintStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class XCodeSDKsCommand implements Command{
+public class XCodeSDKsCommand extends ScanBasicCommand {
 	
 	public int execute( BuildContext context ) {
 		return 1;

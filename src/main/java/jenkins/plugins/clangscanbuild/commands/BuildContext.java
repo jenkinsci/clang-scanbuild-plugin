@@ -22,7 +22,7 @@ public interface BuildContext {
 	 * Returns workspace location of current executing build
 	 */
 	public FilePath getWorkspace();
-	
+
 	/**
 	 * This method starts a process and will not return control until
 	 * either the process is complete or the process is interrupted.  
