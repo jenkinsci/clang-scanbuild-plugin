@@ -15,15 +15,7 @@ public class ScanCMakeBuildCommand extends ScanBasicCommand {
 
 	public int execute(BuildContext context) throws Exception {
 
-		File build = new File(getProjectDirectory().toURI());
 		File src = new File(context.getWorkspace().getRemote(), getWorkspace());
-
-		/* Remove old build folder, but only if we build out of tree. */
-		if (!src.equals(build)) {
-			if (build.exists())
-				deleteFolder(build);
-			build.mkdirs();
-		}
 
 		/* Create the CMake configuration for the target. */
 		ArgumentListBuilder prepargs = new ArgumentListBuilder();
@@ -56,7 +48,7 @@ public class ScanCMakeBuildCommand extends ScanBasicCommand {
 			prepargs.addTokenized(escapeSpacesInPath(additionalBuildArgs));
 		}
 
-		int rc = context.waitForProcess(getProjectDirectory(), prepargs);
+		int rc = context.waitForProcess(context.getWorkspace(), prepargs);
 		if (rc == CommandExecutor.SUCCESS)
 			context.log("CMake successfully generated configuration.");
 		else {
