@@ -153,12 +153,40 @@ public class ClangScanBuildBuilder extends Builder{
 		}
 		
 		try {
-			String path = clangInstallation.getExecutable( launcher ) ;
+			String path = clangInstallation.getExecutable( launcher, "scan-build" ) ;
 			if( path == null ){
 				listener.fatalError( "Unable to locate 'scan-build' within '" + clangInstallation.getHome() + "' as configured in clang installation named '" + clangInstallation.getName() + "' in the global config." );
 				return false;
 			}
-			xcodebuild.setClangScanBuildPath( path );
+			xcodebuild.setClangScanExecutable( path );
+			
+			String analyzer = clangInstallation.getExecutable( launcher, "ccc-analyzer" ) ;
+			if( analyzer == null ){
+				listener.fatalError( "Unable to locate 'ccc-analyzer' within '" + clangInstallation.getHome() + "' as configured in clang installation named '" + clangInstallation.getName() + "' in the global config." );
+				return false;
+			}
+			xcodebuild.setClangAnalyzerExecutable( analyzer );
+			
+			String xxanalyzer = clangInstallation.getExecutable( launcher, "c++-analyzer" ) ;
+			if( xxanalyzer == null ){
+				listener.fatalError( "Unable to locate 'c++-analyzer' within '" + clangInstallation.getHome() + "' as configured in clang installation named '" + clangInstallation.getName() + "' in the global config." );
+				return false;
+			}
+			xcodebuild.setClangXXAnalyzerExecutable( xxanalyzer );
+
+			String clang = clangInstallation.getExecutable( launcher, "clang" ) ;
+			if( clang == null ){
+				listener.fatalError( "Unable to locate 'clang' within '" + clangInstallation.getHome() + "' as configured in clang installation named '" + clangInstallation.getName() + "' in the global config." );
+				return false;
+			}
+			xcodebuild.setClangCompilerExecutable( clang );
+			
+			String clangxx = clangInstallation.getExecutable( launcher, "clang++" ) ;
+			if( clangxx == null ){
+				listener.fatalError( "Unable to locate 'clang++' within '" + clangInstallation.getHome() + "' as configured in clang installation named '" + clangInstallation.getName() + "' in the global config." );
+				return false;
+			}
+			xcodebuild.setClangXXCompilerExecutable( clangxx );
 		} catch ( Exception e) {
 			listener.fatalError( "Unable to locate 'scan-build' within '" + clangInstallation.getHome() + "' as configured in clang installation named '" + clangInstallation.getName() + "' in the global config.", e );
 			return false;

@@ -25,6 +25,7 @@ import org.kohsuke.stapler.QueryParameter;
 public class ClangScanBuildToolInstallation extends ToolInstallation implements NodeSpecific<ClangScanBuildToolInstallation>, EnvironmentSpecific<ClangScanBuildToolInstallation>{
 
 	private static final long serialVersionUID = -2485377492741518511L;
+	private String tool;
 	
 	@DataBoundConstructor
     public ClangScanBuildToolInstallation( 
@@ -46,13 +47,23 @@ public class ClangScanBuildToolInstallation extends ToolInstallation implements 
         }
     }
 
-    public String getExecutable( Launcher launcher ) throws IOException, InterruptedException {
+    private String getTool() {
+    	return tool;
+    }
+    
+    private void setTool(String tool) {
+    	this.tool = tool;
+    }
+    
+    public String getExecutable( Launcher launcher, String tool ) throws IOException, InterruptedException {
+    	setTool(tool);
+    	
         return launcher.getChannel().call( new Callable<String,IOException>() {
 
 			private static final long serialVersionUID = 5437036131007277280L;
 
 			public String call() throws IOException {
-                File scanbuild = new File( getHome(), "scan-build" );
+                File scanbuild = new File( getHome(), getTool() );
                 if( scanbuild.exists() ) return scanbuild.getPath();
                 return null;
             }

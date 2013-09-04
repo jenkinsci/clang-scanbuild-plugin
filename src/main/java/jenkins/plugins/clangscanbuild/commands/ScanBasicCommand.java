@@ -17,6 +17,10 @@ public abstract class ScanBasicCommand implements Command {
 	protected FilePath clangOutputFolder;
 	protected String additionalScanBuildArguments; // Passed directly to shell
 	protected String additionalBuildArguments; // Passed directly to shel
+	protected String clangAnalyzerExecutable;
+	protected String clangXXAnalyzerExecutable;
+	protected String clangCompiler;
+	protected String clangXXCompiler;
 
 	ArgumentListBuilder executeCommon(BuildContext context) throws Exception {
 		if (clangOutputFolder.exists()) {
@@ -30,7 +34,7 @@ public abstract class ScanBasicCommand implements Command {
 		}
 
 		ArgumentListBuilder args = new ArgumentListBuilder();
-			
+
 		args.add(getClangScanBuildExecutable());
 
 		args.add("-k"); // keep going on failure
@@ -103,7 +107,7 @@ public abstract class ScanBasicCommand implements Command {
 	}
 
 	@Override
-	public void setClangScanBuildPath(String path) {
+	public void setClangScanExecutable(String path) {
 		clangScanBuildPath = path;
 	}
 
@@ -111,21 +115,23 @@ public abstract class ScanBasicCommand implements Command {
 	public void setAdditionalBuildArguments(String buildargs) {
 		additionalBuildArguments = buildargs;
 	}
-	
-	protected boolean isBlank( String value ){
-		if( value == null ) return true;
+
+	protected boolean isBlank(String value) {
+		if (value == null)
+			return true;
 		return value.trim().length() <= 0;
 	}
-	
-	protected String escapeSpacesInPath( String path ){
-		if( path == null ) return "";
-		return path.replaceAll( " ", "\\ " );
+
+	protected String escapeSpacesInPath(String path) {
+		if (path == null)
+			return "";
+		return path.replaceAll(" ", "\\ ");
 	}
-	
-	protected boolean isNotBlank( String value ){
-		return !isBlank( value );
+
+	protected boolean isNotBlank(String value) {
+		return !isBlank(value);
 	}
-	
+
 	public String getTargetSdk() {
 		return targetSdk;
 	}
@@ -138,20 +144,38 @@ public abstract class ScanBasicCommand implements Command {
 		return config;
 	}
 
+	public void setClangAnalyzerExecutable(String tool) {
+		clangAnalyzerExecutable = tool;
+	}
+
+	public void setClangXXAnalyzerExecutable(String tool) {
+		clangXXAnalyzerExecutable = tool;
+	}
+
+	public void setClangCompilerExecutable(String tool) {
+		clangCompiler = tool;
+	}
+
+	public void setClangXXCompilerExecutable(String tool) {
+		clangXXCompiler = tool;
+	}
+
+	public String getClangAnalyzerExecutable() {
+		return clangAnalyzerExecutable;
+	}
+
+	public String getClangXXAnalyzerExecutable() {
+		return clangXXAnalyzerExecutable;
+	}
+
 	public String getClangCompilerExecutable() {
-		File base = new File(clangScanBuildPath);
-		File clang = new File(base.getParent(), "clang");
-		
-		return clang.getAbsolutePath();
+		return clangCompiler;
 	}
-	
+
 	public String getClangXXCompilerExecutable() {
-		File base = new File(clangScanBuildPath);
-		File clang = new File(base.getParent(), "clang++");
-		
-		return clang.getAbsolutePath();
+		return clangXXCompiler;
 	}
-	
+
 	public String getClangScanBuildExecutable() {
 		return clangScanBuildPath;
 	}
@@ -179,7 +203,7 @@ public abstract class ScanBasicCommand implements Command {
 	public String getAdditionalBuildArguments() {
 		return additionalBuildArguments;
 	}
-	
+
 	protected static void deleteFolder(File folder) {
 		File[] files = folder.listFiles();
 		if (files != null) {

@@ -36,8 +36,8 @@ public class ScanCMakeBuildCommand extends ScanBasicCommand {
 		prepargs.add("-G" + getTargetSdk());
 		prepargs.add("-B" + getProjectDirectory().getRemote());
 		prepargs.add("-H" + src.getAbsolutePath());
-		prepargs.add("-DCMAKE_C_COMPILER=" + getClangCompilerExecutable());
-		prepargs.add("-DCMAKE_CXX_COMPILER=" + getClangXXCompilerExecutable());
+		prepargs.add("-DCMAKE_C_COMPILER=" + getClangAnalyzerExecutable());
+		prepargs.add("-DCMAKE_CXX_COMPILER=" + getClangXXAnalyzerExecutable());
 
 		String additionalBuildArgs = getAdditionalBuildArguments();
 		if (isNotBlank(additionalBuildArgs)) {

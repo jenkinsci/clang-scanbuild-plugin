@@ -22,7 +22,15 @@ public interface Command {
 	
 	public void setClangOutputFolder(FilePath directory);
 
-	public void setClangScanBuildPath(String path);
+	public void setClangScanExecutable(String path);
 
 	public void setAdditionalBuildArguments(String buildargs);
+	
+	public void setClangAnalyzerExecutable(String tool);
+
+	public void setClangXXAnalyzerExecutable(String tool);
+
+	public void setClangCompilerExecutable(String tool);
+
+	public void setClangXXCompilerExecutable(String tool);
 }
