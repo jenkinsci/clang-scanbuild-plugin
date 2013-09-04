@@ -22,7 +22,7 @@ public class ClangScanBuildBuilderTest extends HudsonTestCase{
 
 		ClangScanBuildBuilder builderAfter = p.getBuildersList().get( ClangScanBuildBuilder.class );
 
-		assertEqualBeans( builderBefore, builderAfter, "target,config,targetSdk,xcodeProjectSubPath,workspace,scheme,scanbuildargs,xcodebuildargs" );
+		assertEqualBeans( builderBefore, builderAfter, "target,config,targetSdk,xcodeProjectSubPath,workspace,scheme,scanbuildargs,buildargs" );
 	}
 	
 }
