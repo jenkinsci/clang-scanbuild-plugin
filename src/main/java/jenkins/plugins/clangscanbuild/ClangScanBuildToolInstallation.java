@@ -55,6 +55,24 @@ public class ClangScanBuildToolInstallation extends ToolInstallation implements 
     	this.tool = tool;
     }
     
+    private static File findExecutableOnPath(String executableName)  
+    {  
+        String systemPath = System.getenv("PATH");  
+        String[] pathDirs = systemPath.split(File.pathSeparator);  
+   
+        File fullyQualifiedExecutable = null;  
+        for (String pathDir : pathDirs)  
+        {  
+            File file = new File(pathDir, executableName);  
+            if (file.isFile())  
+            {  
+                fullyQualifiedExecutable = file;  
+                break;  
+            }  
+        }  
+        return fullyQualifiedExecutable;  
+    }
+    
     public String getExecutable( Launcher launcher, String tool ) throws IOException, InterruptedException {
     	setTool(tool);
     	
@@ -65,6 +83,11 @@ public class ClangScanBuildToolInstallation extends ToolInstallation implements 
 			public String call() throws IOException {
                 File scanbuild = new File( getHome(), getTool() );
                 if( scanbuild.exists() ) return scanbuild.getPath();
+                
+                /* Fall back to environment and check, if the tool can be found... */
+                scanbuild = findExecutableOnPath(getTool());
+                if( scanbuild.exists() ) return scanbuild.getPath();
+                
                 return null;
             }
         	
