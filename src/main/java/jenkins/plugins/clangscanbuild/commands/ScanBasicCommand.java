@@ -43,8 +43,6 @@ public abstract class ScanBasicCommand implements Command {
 
 		args.add("-o"); // output folder
 		args.add(escapeSpacesInPath(clangOutputFolder.getRemote()));
-		if (!getClangCompilerExecutable().isEmpty())
-			args.add("--use-analyzer", getClangCompilerExecutable());
 
 		String additionalArgs = getAdditionalScanBuildArguments();
 		if (isNotBlank(additionalArgs)) {
