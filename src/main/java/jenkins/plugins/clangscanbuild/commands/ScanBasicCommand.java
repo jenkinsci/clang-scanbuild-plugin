@@ -17,10 +17,10 @@ public abstract class ScanBasicCommand implements Command {
 	protected FilePath clangOutputFolder;
 	protected String additionalScanBuildArguments; // Passed directly to shell
 	protected String additionalBuildArguments; // Passed directly to shel
-	protected String clangAnalyzerExecutable;
-	protected String clangXXAnalyzerExecutable;
-	protected String clangCompiler;
-	protected String clangXXCompiler;
+	protected String clangAnalyzerExecutable = "";
+	protected String clangXXAnalyzerExecutable = "";
+	protected String clangCompiler = "";
+	protected String clangXXCompiler = "";
 
 	ArgumentListBuilder executeCommon(BuildContext context) throws Exception {
 		if (clangOutputFolder.exists()) {
