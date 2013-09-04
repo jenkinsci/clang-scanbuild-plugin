@@ -19,7 +19,7 @@ public class ScanBuildCommandTest{
 	public void onlyRequiredOptionsSet() throws Exception{
 		ScanBuildCommand command = new ScanBuildCommand();
 		command.setClangOutputFolder( new FilePath( new File( "OutputFolder" ) ) );
-		command.setClangScanBuildPath( "/ScanBuild" );
+		command.setClangScanExecutable( "/ScanBuild" );
 		command.setProjectDirectory( new FilePath( new File( "/ProjectDir" ) ) );
 
 		String actual = buildCommandAndReturn( command );
@@ -33,7 +33,7 @@ public class ScanBuildCommandTest{
 		// XCode 4 workspace/scheme should override unnecessary target
 		ScanBuildCommand command = new ScanBuildCommand();
 		command.setClangOutputFolder( new FilePath( new File( "OutputFolder" ) ) );
-		command.setClangScanBuildPath( "/ScanBuild" );
+		command.setClangScanExecutable( "/ScanBuild" );
 		command.setConfig( "myConfig" );
 		command.setProjectDirectory( new FilePath( new File( "/ProjectDir" ) ) );
 		command.setScheme( "myScheme" );
@@ -52,7 +52,7 @@ public class ScanBuildCommandTest{
 		// XCode 4 workspace/scheme should override unnecessary target
 		ScanBuildCommand command = new ScanBuildCommand();
 		command.setClangOutputFolder( new FilePath( new File( "OutputFolder" ) ) );
-		command.setClangScanBuildPath( "/ScanBuild" );
+		command.setClangScanExecutable( "/ScanBuild" );
 		command.setConfig( "myConfig" );
 		command.setProjectDirectory( new FilePath( new File( "/ProjectDir" ) ) );
 		command.setTarget( "myTarget" );
@@ -83,7 +83,7 @@ public class ScanBuildCommandTest{
 		// XCode 4 workspace/scheme should override unnecessary target
 		ScanBuildCommand command = new ScanBuildCommand();
 		command.setClangOutputFolder( new FilePath( new File( "OutputFolder" ) ) );
-		command.setClangScanBuildPath( "/ScanBuild" );
+		command.setClangScanExecutable( "/ScanBuild" );
 		command.setConfig( "myConfig" );
 		command.setProjectDirectory( new FilePath( new File( "/ProjectDir" ) ) );
 		command.setScheme( "myScheme" );
@@ -104,7 +104,7 @@ public class ScanBuildCommandTest{
 		// XCode 4 workspace/scheme should override unnecessary target
 		ScanBuildCommand command = new ScanBuildCommand();
 		command.setClangOutputFolder( new FilePath( new File( "OutputFolder" ) ) );
-		command.setClangScanBuildPath( "/ScanBuild" );
+		command.setClangScanExecutable( "/ScanBuild" );
 		command.setConfig( "myConfig" );
 		command.setProjectDirectory( new FilePath( new File( "/ProjectDir" ) ) );
 		command.setScheme( "myScheme" );
@@ -125,7 +125,7 @@ public class ScanBuildCommandTest{
 		// XCode 4 workspace/scheme should override unnecessary target
 		ScanBuildCommand command = new ScanBuildCommand();
 		command.setClangOutputFolder( new FilePath( new File( "OutputFolder" ) ) );
-		command.setClangScanBuildPath( "/ScanBuild" );
+		command.setClangScanExecutable( "/ScanBuild" );
 		command.setConfig( "myConfig" );
 		command.setProjectDirectory( new FilePath( new File( "/ProjectDir" ) ) );
 		command.setScheme( "myScheme" );
@@ -145,7 +145,7 @@ public class ScanBuildCommandTest{
 		// XCode 4 workspace/scheme should override unnecessary target
 		ScanBuildCommand command = new ScanBuildCommand();
 		command.setClangOutputFolder( new FilePath( new File( "OutputFolder" ) ) );
-		command.setClangScanBuildPath( "/ScanBuild" );
+		command.setClangScanExecutable( "/ScanBuild" );
 		command.setConfig( "myConfig" );
 		command.setProjectDirectory( new FilePath( new File( "/ProjectDir" ) ) );
 		command.setScheme( "myScheme" );
