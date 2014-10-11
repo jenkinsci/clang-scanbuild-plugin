@@ -1,2 +1,8 @@
 This field can be used to pass additional arguments to clang scan-build.  The arguments will appear before the xcodebuild sub command.  
 You can view the assembled command by viewing the job's build console.
+<br/><br/>
+scan-build uses the 'clang' executable relative to itself for static analysis by default.
+<br/>
+<i><b>--use-analyzer Xcode</b></i> using the 'clang' packaged with Xcode (on OS X)
+<br/>
+<i><b>--use-analyzer [path to clang]</b></i> to use the 'clang' from <i>'path to clang'</i> or <i>$PATH</i> if no path specified.
