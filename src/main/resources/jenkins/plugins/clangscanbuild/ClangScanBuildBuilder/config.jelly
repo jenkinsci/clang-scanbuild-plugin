@@ -4,11 +4,11 @@
     		<f:textbox />
   	</f:entry>
 
-  	<f:entry title="XCode 4 workspace" field="workspace">
+  	<f:entry title="XCode workspace" field="workspace">
     		<f:textbox />
   	</f:entry>
   	
-  	<f:entry title="XCode 4 scheme" field="scheme">
+  	<f:entry title="XCode scheme" field="scheme">
     		<f:textbox />
   	</f:entry>
 	
