@@ -35,7 +35,7 @@ public class ClangScanBuildAction implements Action, StaplerProxy, ModelObject{
 	private int bugCount;
 	private AbstractBuild<?,?> build;
 	
-	private Pattern APPROVED_REPORT_REQUEST_PATTERN = Pattern.compile( "[^.\\\\/]*\\.html" );
+	private Pattern APPROVED_REPORT_REQUEST_PATTERN = Pattern.compile( "[^.\\\\/]*\\.html|StaticAnalyzer.*\\.html" );
 	
 	public ClangScanBuildAction( AbstractBuild<?,?> build, int bugCount, boolean markBuildUnstable, int bugThreshold, FilePath bugSummaryXML ){
 		this.bugThreshold = bugThreshold;
