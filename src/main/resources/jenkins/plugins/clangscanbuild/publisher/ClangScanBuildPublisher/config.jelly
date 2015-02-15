@@ -7,6 +7,10 @@
 		    <f:entry title="Clang bug threshold" field="bugThreshold">
 		    		<f:textbox />
 		  	</f:entry>
+
+      <f:entry title="Paths to exclude from bug reports" field="clangexcludedpaths">
+    		<f:textbox />
+  		</f:entry>
 	      
 	    </f:optionalBlock>
 	  </table>

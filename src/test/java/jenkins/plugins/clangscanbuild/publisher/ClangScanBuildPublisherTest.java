@@ -14,7 +14,7 @@ public class ClangScanBuildPublisherTest extends HudsonTestCase{
 		
 		FreeStyleProject p = createFreeStyleProject();
 		
-		ClangScanBuildPublisher publisherBefore = new ClangScanBuildPublisher( true, 45 );
+		ClangScanBuildPublisher publisherBefore = new ClangScanBuildPublisher( true, 45, "Pods" );
 		p.getPublishersList().add( publisherBefore );
 
 		HtmlForm form = createWebClient().getPage( p, "configure" ).getFormByName( "config" );
@@ -22,7 +22,7 @@ public class ClangScanBuildPublisherTest extends HudsonTestCase{
 
 		ClangScanBuildPublisher publisherAfter = p.getPublishersList().get( ClangScanBuildPublisher.class );
 
-		assertEqualBeans( publisherBefore, publisherAfter, "bugThreshold,markBuildUnstableWhenThresholdIsExceeded" );
+		assertEqualBeans( publisherBefore, publisherAfter, "bugThreshold,markBuildUnstableWhenThresholdIsExceeded,clangexcludedpaths" );
 	}
 	
 }

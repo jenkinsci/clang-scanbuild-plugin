@@ -22,14 +22,16 @@ public class ClangScanBuildPublisherDescriptor extends BuildStepDescriptor<Publi
 
 		boolean markBuildUnstable = false;
 		int bugThreshold = 0;
+    String excludedPaths = "";
 		
 		JSONObject failWhenThresholdExceeded = json.optJSONObject( "failWhenThresholdExceeded" );
 		if( failWhenThresholdExceeded != null ){
 			markBuildUnstable = true;
 			bugThreshold = failWhenThresholdExceeded.getInt( "bugThreshold" );
+      excludedPaths = failWhenThresholdExceeded.getString( "clangexcludedpaths" );
 		}
-		
-		return new ClangScanBuildPublisher(  markBuildUnstable, bugThreshold );
+    		
+		return new ClangScanBuildPublisher( markBuildUnstable, bugThreshold, excludedPaths );
 	}
 	
 	@Override
@@ -42,7 +44,7 @@ public class ClangScanBuildPublisherDescriptor extends BuildStepDescriptor<Publi
 		if( !FreeStyleProject.class.isAssignableFrom( jobType ) ){
 			System.err.println( "Clang scan-build ERROR: Expected FreeStyleProject but was: " + jobType + " at Publisher Descriptor" );
 		}
-		return FreeStyleProject.class.isAssignableFrom( jobType );
+		return AbstractProject.class.isAssignableFrom( jobType );
 	}
 
 }
