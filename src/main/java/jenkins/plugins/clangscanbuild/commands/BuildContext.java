@@ -1,5 +1,7 @@
 package jenkins.plugins.clangscanbuild.commands;
 
+import java.util.List;
+
 import hudson.FilePath;
 import hudson.util.ArgumentListBuilder;
 
@@ -22,7 +24,7 @@ public interface BuildContext {
 	 * Returns workspace location of current executing build
 	 */
 	public FilePath getWorkspace();
-	
+
 	/**
 	 * This method starts a process and will not return control until
 	 * either the process is complete or the process is interrupted.  
@@ -36,5 +38,4 @@ public interface BuildContext {
 	 * Logs a message to the build listener.
 	 */
 	public void log( String message );
-	
 }

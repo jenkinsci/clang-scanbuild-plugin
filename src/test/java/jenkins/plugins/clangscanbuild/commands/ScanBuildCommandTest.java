@@ -19,7 +19,7 @@ public class ScanBuildCommandTest{
 	public void onlyRequiredOptionsSet() throws Exception{
 		ScanBuildCommand command = new ScanBuildCommand();
 		command.setClangOutputFolder( new FilePath( new File( "OutputFolder" ) ) );
-		command.setClangScanBuildPath( "/ScanBuild" );
+		command.setClangScanExecutable( "/ScanBuild" );
 		command.setProjectDirectory( new FilePath( new File( "/ProjectDir" ) ) );
 
 		String actual = buildCommandAndReturn( command );
@@ -33,7 +33,7 @@ public class ScanBuildCommandTest{
 		// XCode 4 workspace/scheme should override unnecessary target
 		ScanBuildCommand command = new ScanBuildCommand();
 		command.setClangOutputFolder( new FilePath( new File( "OutputFolder" ) ) );
-		command.setClangScanBuildPath( "/ScanBuild" );
+		command.setClangScanExecutable( "/ScanBuild" );
 		command.setConfig( "myConfig" );
 		command.setProjectDirectory( new FilePath( new File( "/ProjectDir" ) ) );
 		command.setScheme( "myScheme" );
@@ -52,7 +52,7 @@ public class ScanBuildCommandTest{
 		// XCode 4 workspace/scheme should override unnecessary target
 		ScanBuildCommand command = new ScanBuildCommand();
 		command.setClangOutputFolder( new FilePath( new File( "OutputFolder" ) ) );
-		command.setClangScanBuildPath( "/ScanBuild" );
+		command.setClangScanExecutable( "/ScanBuild" );
 		command.setConfig( "myConfig" );
 		command.setProjectDirectory( new FilePath( new File( "/ProjectDir" ) ) );
 		command.setTarget( "myTarget" );
@@ -83,7 +83,7 @@ public class ScanBuildCommandTest{
 		// XCode 4 workspace/scheme should override unnecessary target
 		ScanBuildCommand command = new ScanBuildCommand();
 		command.setClangOutputFolder( new FilePath( new File( "OutputFolder" ) ) );
-		command.setClangScanBuildPath( "/ScanBuild" );
+		command.setClangScanExecutable( "/ScanBuild" );
 		command.setConfig( "myConfig" );
 		command.setProjectDirectory( new FilePath( new File( "/ProjectDir" ) ) );
 		command.setScheme( "myScheme" );
@@ -104,14 +104,14 @@ public class ScanBuildCommandTest{
 		// XCode 4 workspace/scheme should override unnecessary target
 		ScanBuildCommand command = new ScanBuildCommand();
 		command.setClangOutputFolder( new FilePath( new File( "OutputFolder" ) ) );
-		command.setClangScanBuildPath( "/ScanBuild" );
+		command.setClangScanExecutable( "/ScanBuild" );
 		command.setConfig( "myConfig" );
 		command.setProjectDirectory( new FilePath( new File( "/ProjectDir" ) ) );
 		command.setScheme( "myScheme" );
 		command.setTarget( "myTarget" );
 		command.setTargetSdk( "myTargetSdk" );
 		command.setWorkspace( "myWorkspace" );
-		command.setAdditionalXcodeBuildArguments("VALID_ARCHS=i386" );
+		command.setAdditionalBuildArguments("VALID_ARCHS=i386" );
 
 		String actual = buildCommandAndReturn( command );
 		
@@ -125,7 +125,7 @@ public class ScanBuildCommandTest{
 		// XCode 4 workspace/scheme should override unnecessary target
 		ScanBuildCommand command = new ScanBuildCommand();
 		command.setClangOutputFolder( new FilePath( new File( "OutputFolder" ) ) );
-		command.setClangScanBuildPath( "/ScanBuild" );
+		command.setClangScanExecutable( "/ScanBuild" );
 		command.setConfig( "myConfig" );
 		command.setProjectDirectory( new FilePath( new File( "/ProjectDir" ) ) );
 		command.setScheme( "myScheme" );
@@ -145,7 +145,7 @@ public class ScanBuildCommandTest{
 		// XCode 4 workspace/scheme should override unnecessary target
 		ScanBuildCommand command = new ScanBuildCommand();
 		command.setClangOutputFolder( new FilePath( new File( "OutputFolder" ) ) );
-		command.setClangScanBuildPath( "/ScanBuild" );
+		command.setClangScanExecutable( "/ScanBuild" );
 		command.setConfig( "myConfig" );
 		command.setProjectDirectory( new FilePath( new File( "/ProjectDir" ) ) );
 		command.setScheme( "myScheme" );
@@ -153,7 +153,7 @@ public class ScanBuildCommandTest{
 		command.setTargetSdk( "myTargetSdk" );
 		command.setWorkspace( "myWorkspace" );
 		command.setAdditionalScanBuildArguments( "-h -x somevalue" );
-                command.setAdditionalXcodeBuildArguments("THIS=1 THAT=2");
+                command.setAdditionalBuildArguments("THIS=1 THAT=2");
 
 		String actual = buildCommandAndReturn( command );
 		

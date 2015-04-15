@@ -7,11 +7,13 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.tools.ToolInstallation;
 import hudson.util.FormValidation;
+import hudson.util.ListBoxModel;
 
 import java.io.IOException;
 
 import javax.servlet.ServletException;
 
+import jenkins.plugins.clangscanbuild.ClangScanBuildToolInstallation.ClangStaticAnalyzerToolDescriptor;
 import net.sf.json.JSONObject;
 
 import org.kohsuke.stapler.QueryParameter;
@@ -43,7 +45,7 @@ public class ClangScanBuildDescriptor extends BuildStepDescriptor<Builder>{
     public ClangScanBuildToolInstallation.ClangStaticAnalyzerToolDescriptor getToolDescriptor(){
         return ToolInstallation.all().get( ClangScanBuildToolInstallation.ClangStaticAnalyzerToolDescriptor.class );
     }
-    
+
     public ClangScanBuildToolInstallation[] getInstallations(){
         return installations;
     }
@@ -102,5 +104,14 @@ public class ClangScanBuildDescriptor extends BuildStepDescriptor<Builder>{
     public boolean isApplicable( @SuppressWarnings("rawtypes") Class<? extends AbstractProject> jobType ){
         return AbstractProject.class.isAssignableFrom( jobType );
     }
-    
+
+    public ListBoxModel doFillBuildcommandItems() {
+    	ListBoxModel items = new ListBoxModel();
+    	String [] tools = CommandFactory.getToolchains();
+    	
+    	for (String s : tools) {
+    		items.add(s, s);
+    	}
+    	return items;
+    }
 }

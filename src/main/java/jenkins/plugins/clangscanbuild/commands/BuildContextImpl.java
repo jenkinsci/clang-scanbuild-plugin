@@ -10,6 +10,7 @@ import hudson.util.ArgumentListBuilder;
 import hudson.model.TaskListener;
 
 import java.io.IOException;
+import java.util.List;
 
 @SuppressWarnings("rawtypes")
 public class BuildContextImpl implements BuildContext{
@@ -48,7 +49,7 @@ public class BuildContextImpl implements BuildContext{
 	public FilePath getBuildFolder() {
 		return new FilePath( build.getRootDir() );
 	}
-
+	
 	@Override
 	public int waitForProcess( FilePath presentWorkingDirectory, ArgumentListBuilder command ){
 
@@ -78,5 +79,4 @@ public class BuildContextImpl implements BuildContext{
 		
 		return 1; // ERROR
 	}
-
 }

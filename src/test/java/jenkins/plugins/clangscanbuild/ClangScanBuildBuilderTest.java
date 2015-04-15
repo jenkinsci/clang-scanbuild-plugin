@@ -14,7 +14,7 @@ public class ClangScanBuildBuilderTest extends HudsonTestCase{
 		
 		FreeStyleProject p = createFreeStyleProject();
 		
-		ClangScanBuildBuilder builderBefore = new ClangScanBuildBuilder( "target", "sdk", "config", "installName", "projPath", "workspace", "scheme", "someargs", "somexcodeargs" );
+		ClangScanBuildBuilder builderBefore = new ClangScanBuildBuilder( "target", "sdk", "config", "installName", "projPath", "workspace", "xcode", "scheme", "someargs", "somexcodeargs" );
 		p.getBuildersList().add( builderBefore );
 
 		HtmlForm form = createWebClient().getPage( p, "configure" ).getFormByName( "config" );
@@ -22,7 +22,7 @@ public class ClangScanBuildBuilderTest extends HudsonTestCase{
 
 		ClangScanBuildBuilder builderAfter = p.getBuildersList().get( ClangScanBuildBuilder.class );
 
-		assertEqualBeans( builderBefore, builderAfter, "target,config,targetSdk,xcodeProjectSubPath,workspace,scheme,scanbuildargs,xcodebuildargs" );
+		assertEqualBeans( builderBefore, builderAfter, "target,config,targetSdk,xcodeProjectSubPath,workspace,scheme,scanbuildargs,buildargs" );
 	}
 	
 }

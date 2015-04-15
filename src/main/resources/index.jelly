@@ -1,4 +1,4 @@
 <div>
-  This plugin provides an new type of build-step and a publisher which can be used together to have an XCode project
-  statically analyzed using the Clang Static Analyzer.
+  This plugin provides an new type of build-step and a publisher which can be used together
+  to have a project statically analyzed using the Clang Static Analyzer.
 </div>
