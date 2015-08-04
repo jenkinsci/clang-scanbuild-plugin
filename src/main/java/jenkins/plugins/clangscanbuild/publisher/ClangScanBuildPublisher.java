@@ -1,5 +1,6 @@
 package jenkins.plugins.clangscanbuild.publisher;
 
+import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -45,19 +46,22 @@ public class ClangScanBuildPublisher extends Recorder{
 
 	private int bugThreshold;
 	private String clangexcludedpaths; 
+	private String reportFolderName;
 
 	private boolean markBuildUnstableWhenThresholdIsExceeded;
 
 	public ClangScanBuildPublisher( 
 			boolean markBuildUnstableWhenThresholdIsExceeded, 
 			int bugThreshold,
-			String clangexcludedpaths
+			String clangexcludedpaths,
+			String reportFolderName
       ){
 		
 		super();
 		this.markBuildUnstableWhenThresholdIsExceeded = markBuildUnstableWhenThresholdIsExceeded;
 		this.bugThreshold = bugThreshold;
 		this.clangexcludedpaths = Util.fixNull(clangexcludedpaths);
+		this.reportFolderName = Util.fixNull(reportFolderName);
 	}
 
 	public int getBugThreshold() {
@@ -75,6 +79,15 @@ public class ClangScanBuildPublisher extends Recorder{
 	public void setClangexcludedpaths(String clangExcludePaths){
 		this.clangexcludedpaths = Util.fixNull(clangExcludePaths);
 	}
+
+	public void setReportFolderName(String folderName){
+		this.reportFolderName = Util.fixNull(folderName);
+	}
+
+	public String getReportFolderName(){
+		return reportFolderName;
+	}
+
 
 	@Override
 	public Action getProjectAction( AbstractProject<?, ?> project ){
@@ -99,8 +112,12 @@ public class ClangScanBuildPublisher extends Recorder{
 
 		listener.getLogger().println( "Publishing Clang scan-build results" );
 		
-		FilePath reportOutputFolder = new FilePath(build.getWorkspace(), ClangScanBuildUtils.REPORT_OUTPUT_FOLDERNAME); 
-		FilePath reportMasterOutputFolder = ClangScanBuildUtils.locateClangScanBuildReportFolder(build);
+		// Expand build variables in the reportFolderName
+		EnvVars env = build.getEnvironment(listener);
+		reportFolderName = env.expand(reportFolderName);
+		
+		FilePath reportOutputFolder = new FilePath(build.getWorkspace(), reportFolderName); 
+		FilePath reportMasterOutputFolder = ClangScanBuildUtils.locateClangScanBuildReportFolder(build, reportFolderName);
 		
 		// This copies the reports out of the generate date sub folder to the root of the reports folder and then deletes the clang generated folder
 		copyClangReportsOutOfGeneratedSubFolder( reportOutputFolder, listener );
@@ -146,7 +163,7 @@ public class ClangScanBuildPublisher extends Recorder{
 		bugSummaryXMLFile.write( bugSummaryXML, "UTF-8" );
 		
 		// this adds a build actions which records the bug count into the build results.  This count is used to generate the trend charts
-		final ClangScanBuildAction action = new ClangScanBuildAction( build, newBugSummary.getBugCount(), markBuildUnstableWhenThresholdIsExceeded, bugThreshold, bugSummaryXMLFile );
+		final ClangScanBuildAction action = new ClangScanBuildAction( build, newBugSummary.getBugCount(), markBuildUnstableWhenThresholdIsExceeded, bugThreshold, bugSummaryXMLFile, reportFolderName );
         build.getActions().add( action );
 
         // this checks if the build should be failed due to an increase in bugs
@@ -200,12 +217,12 @@ public class ClangScanBuildPublisher extends Recorder{
 				return;
 			}
 	
-			for (FilePath clangDateFolder : subFolders) {
-                            clangDateFolder.copyRecursiveTo( reportsFolder );
-                            clangDateFolder.deleteRecursive();
+			for (FilePath clangDataFolder : subFolders) {
+                            clangDataFolder.copyRecursiveTo( reportsFolder );
+                            clangDataFolder.deleteRecursive();
                         }
 		}catch( Exception e ){
-			listener.fatalError( "Unable to copy Clan scan-build output to build archive folder." );
+			listener.fatalError( "Unable to copy Clang scan-build output (" + reportsFolder + ") to build archive folder." );
 		}
 	}
 	/**

@@ -22,9 +22,9 @@ public class ClangScanBuildHistoryGathererImplTest extends HudsonTestCase{
 		FreeStyleProject project = createFreeStyleProject( "Test Project" );
 		
 		// The test instance is set to a threshold of 5...builds 2 and 7 should be excluded
-		performBuildWithClangAction( project, 1 );
+		performBuildWithClangAction( project, 1, "outputFolderName-1" );
 		performBuildWithOutClangAction( project );
-		FreeStyleBuild lastBuild = performBuildWithClangAction( project, 3 );
+		FreeStyleBuild lastBuild = performBuildWithClangAction( project, 3, "outputFolderName-3" );
 
 		List<GraphPoint> summaries = classUnderTest.gatherHistoryDataSet( lastBuild );
 	
@@ -35,7 +35,7 @@ public class ClangScanBuildHistoryGathererImplTest extends HudsonTestCase{
 	public void testFirstBuildDoesNotFail() throws Exception{
 		FreeStyleProject project = createFreeStyleProject( "Test Project" );
 		
-		FreeStyleBuild build1 = performBuildWithClangAction( project, 1 );
+		FreeStyleBuild build1 = performBuildWithClangAction( project, 1, "outputFolderName-1" );
 		
 		List<GraphPoint> summaries = classUnderTest.gatherHistoryDataSet( build1 );
 		
@@ -44,15 +44,15 @@ public class ClangScanBuildHistoryGathererImplTest extends HudsonTestCase{
 	
 	private class TestClangScanBuildAction extends ClangScanBuildAction{
 
-		public TestClangScanBuildAction( AbstractBuild<?,?> build, int bugCount, int threshold ){
-			super( build, bugCount, true, threshold, null );
+		public TestClangScanBuildAction( AbstractBuild<?,?> build, int bugCount, int threshold, String outputFolderName ){
+			super( build, bugCount, true, threshold, null, outputFolderName );
 		}
 
 	}
 	
-	private FreeStyleBuild performBuildWithClangAction( FreeStyleProject project, int bugCount ) throws Exception {
+	private FreeStyleBuild performBuildWithClangAction( FreeStyleProject project, int bugCount, String outputFolderName ) throws Exception {
 		FreeStyleBuild build = project.scheduleBuild2(0).get();
-		build.addAction( new TestClangScanBuildAction( build, bugCount, 0 ) );
+		build.addAction( new TestClangScanBuildAction( build, bugCount, 0, outputFolderName ) );
 		return build;
 	}
 	

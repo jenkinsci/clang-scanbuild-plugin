@@ -43,5 +43,9 @@
   		</f:entry>
   		
 	</f:advanced>
+
+	<f:entry title="Output Folder" field="outputFolderName">
+		<f:textbox default="clangScanBuildReports"/>
+	</f:entry>
   	
 </j:jelly>

@@ -33,15 +33,18 @@ public class ClangScanBuildAction implements Action, StaplerProxy, ModelObject{
 	private FilePath bugSummaryXML;
 	private boolean markBuildUnstable;
 	private int bugCount;
+	private String outputFolderName;
 	
 	private Pattern APPROVED_REPORT_REQUEST_PATTERN = Pattern.compile( "[^.\\\\/]*\\.html|StaticAnalyzer.*\\.html" );
 	
-	public ClangScanBuildAction( AbstractBuild<?,?> build, int bugCount, boolean markBuildUnstable, int bugThreshold, FilePath bugSummaryXML ){
+	public ClangScanBuildAction( AbstractBuild<?,?> build, int bugCount, boolean markBuildUnstable, 
+			int bugThreshold, FilePath bugSummaryXML, String outputFolderName ){
 		this.bugThreshold = bugThreshold;
 		this.bugCount = bugCount;
 		this.bugSummaryXML = bugSummaryXML;
 		this.markBuildUnstable = markBuildUnstable;
 		this.build = build;
+		this.outputFolderName = outputFolderName;
 	}
 
 	public AbstractBuild<?,?> build;
@@ -140,7 +143,7 @@ public class ClangScanBuildAction implements Action, StaplerProxy, ModelObject{
     		return;
     	}
     	
-    	FilePath reports = ClangScanBuildUtils.locateClangScanBuildReportFolder( build );
+    	FilePath reports = ClangScanBuildUtils.locateClangScanBuildReportFolder( build, outputFolderName );
     	FilePath requestedFile = new FilePath( reports, trimFirstSlash( requestedPath ) );
     	
     	try{
