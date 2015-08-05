@@ -114,10 +114,10 @@ public class ClangScanBuildPublisher extends Recorder{
 		
 		// Expand build variables in the reportFolderName
 		EnvVars env = build.getEnvironment(listener);
-		reportFolderName = env.expand(reportFolderName);
+		String expandedReportFolderName = env.expand(reportFolderName);
 		
-		FilePath reportOutputFolder = new FilePath(build.getWorkspace(), reportFolderName); 
-		FilePath reportMasterOutputFolder = ClangScanBuildUtils.locateClangScanBuildReportFolder(build, reportFolderName);
+		FilePath reportOutputFolder = new FilePath(build.getWorkspace(), expandedReportFolderName); 
+		FilePath reportMasterOutputFolder = ClangScanBuildUtils.locateClangScanBuildReportFolder(build, expandedReportFolderName);
 		
 		// This copies the reports out of the generate date sub folder to the root of the reports folder and then deletes the clang generated folder
 		copyClangReportsOutOfGeneratedSubFolder( reportOutputFolder, listener );
@@ -163,7 +163,7 @@ public class ClangScanBuildPublisher extends Recorder{
 		bugSummaryXMLFile.write( bugSummaryXML, "UTF-8" );
 		
 		// this adds a build actions which records the bug count into the build results.  This count is used to generate the trend charts
-		final ClangScanBuildAction action = new ClangScanBuildAction( build, newBugSummary.getBugCount(), markBuildUnstableWhenThresholdIsExceeded, bugThreshold, bugSummaryXMLFile, reportFolderName );
+		final ClangScanBuildAction action = new ClangScanBuildAction( build, newBugSummary.getBugCount(), markBuildUnstableWhenThresholdIsExceeded, bugThreshold, bugSummaryXMLFile, expandedReportFolderName );
         build.getActions().add( action );
 
         // this checks if the build should be failed due to an increase in bugs
