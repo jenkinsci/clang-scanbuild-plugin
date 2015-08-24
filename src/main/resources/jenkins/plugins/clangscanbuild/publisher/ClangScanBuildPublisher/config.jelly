@@ -11,8 +11,14 @@
 		    <f:entry title="Paths to exclude from bug reports" field="clangexcludedpaths">
 					<f:textbox />
 			</f:entry>
+
 	      
 	    </f:optionalBlock>
+	    
+	    <f:entry title="Report folder" field="reportFolderName">
+				<f:textbox default="clangScanBuildReports"/>
+		</f:entry>
+	    
 	  </table>
    </f:nested>
   	

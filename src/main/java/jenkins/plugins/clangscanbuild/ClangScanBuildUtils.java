@@ -16,9 +16,9 @@ public class ClangScanBuildUtils{
 		return "/plugin/" + PluginImpl.SHORTNAME + "/transparent.png";
 	}
 	
-	public static FilePath locateClangScanBuildReportFolder( AbstractBuild<?,?> build ){
+	public static FilePath locateClangScanBuildReportFolder( AbstractBuild<?,?> build, String folderName ){
 		if( build == null ) return null;
-		return new FilePath( new FilePath( build.getRootDir() ), REPORT_OUTPUT_FOLDERNAME );
+		return new FilePath( new FilePath( build.getRootDir() ), folderName );
 	}
 	
 }
