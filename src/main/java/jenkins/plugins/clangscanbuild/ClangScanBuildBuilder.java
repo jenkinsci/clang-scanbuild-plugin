@@ -54,8 +54,8 @@ public class ClangScanBuildBuilder extends Builder{
     		String workspace,
     		String scheme,
     		String scanbuildargs,
-            String xcodebuildargs,
-			String outputFolderName){
+    		String xcodebuildargs,
+    		String outputFolderName){
     	
         this.target = Util.fixEmptyAndTrim( target );
         this.targetSdk = Util.fixEmptyAndTrim( targetSdk );
