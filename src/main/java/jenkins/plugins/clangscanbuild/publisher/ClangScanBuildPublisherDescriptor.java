@@ -41,10 +41,11 @@ public class ClangScanBuildPublisherDescriptor extends BuildStepDescriptor<Publi
 
 	@Override
 	public boolean isApplicable( @SuppressWarnings("rawtypes") Class<? extends AbstractProject> jobType ){
-		if( !FreeStyleProject.class.isAssignableFrom( jobType ) ){
-			System.err.println( "Clang scan-build ERROR: Expected FreeStyleProject but was: " + jobType + " at Publisher Descriptor" );
-		}
-		return AbstractProject.class.isAssignableFrom( jobType );
+//		if( !FreeStyleProject.class.isAssignableFrom( jobType ) ){
+//			System.err.println( "Clang scan-build ERROR: Expected FreeStyleProject but was: " + jobType + " at Publisher Descriptor" );
+//		}
+//		return AbstractProject.class.isAssignableFrom( jobType );
+		return FreeStyleProject.class.isAssignableFrom( jobType );
 	}
 
 }
