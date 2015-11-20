@@ -106,6 +106,6 @@ public class ClangScanBuildDescriptor extends BuildStepDescriptor<Builder>{
 
     @Override
     public boolean isApplicable(Class<? extends AbstractProject> jobType) {
-    	return true;
+    	return AbstractProject.class.isAssignableFrom(jobType);
     }
 }

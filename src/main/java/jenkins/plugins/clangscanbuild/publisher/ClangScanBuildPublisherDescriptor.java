@@ -40,7 +40,7 @@ public class ClangScanBuildPublisherDescriptor extends BuildStepDescriptor<Publi
 
 	@Override
 	public boolean isApplicable( @SuppressWarnings("rawtypes") Class<? extends AbstractProject> jobType ){
-		return true;
+		return AbstractProject.class.isAssignableFrom(jobType);
 	}
 
 }
