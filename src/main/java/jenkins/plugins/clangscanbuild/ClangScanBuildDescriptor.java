@@ -2,7 +2,6 @@ package jenkins.plugins.clangscanbuild;
 
 import hudson.CopyOnWrite;
 import hudson.model.AbstractProject;
-import hudson.model.FreeStyleProject;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.tools.ToolInstallation;
@@ -105,8 +104,8 @@ public class ClangScanBuildDescriptor extends BuildStepDescriptor<Builder>{
         return super.configure( req, formData );
     }
 
-    public boolean isApplicable( @SuppressWarnings("rawtypes") Class<? extends AbstractProject> jobType ){
-        return AbstractProject.class.isAssignableFrom( jobType );
+    @Override
+    public boolean isApplicable(Class<? extends AbstractProject> jobType) {
+    	return AbstractProject.class.isAssignableFrom(jobType);
     }
-    
 }

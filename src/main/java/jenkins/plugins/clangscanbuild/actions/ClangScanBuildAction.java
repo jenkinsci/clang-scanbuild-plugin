@@ -4,20 +4,19 @@ import hudson.FilePath;
 import hudson.model.Action;
 import hudson.model.ModelObject;
 import hudson.model.AbstractBuild;
-import hudson.util.FormValidation;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-import javax.servlet.ServletException;
-
 import jenkins.plugins.clangscanbuild.ClangScanBuildUtils;
 import jenkins.plugins.clangscanbuild.history.ClangScanBuildBugSummary;
 
-import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerProxy;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+
+import java.util.logging.Logger;
+import static java.util.logging.Level.FINEST;
 
 /**
  * This contributes the menu to the left used to access reports/whatever from inside a 
@@ -27,7 +26,8 @@ import org.kohsuke.stapler.StaplerResponse;
  * @author Josh Kennedy
  */
 public class ClangScanBuildAction implements Action, StaplerProxy, ModelObject{
-
+	private static final Logger LOGGER = Logger.getLogger(ClangScanBuildAction.class.getName());
+	
 	public static final String BUILD_ACTION_URL_NAME = "clangScanBuildBugs";
 	private int bugThreshold;
 	private FilePath bugSummaryXML;
@@ -77,10 +77,10 @@ public class ClangScanBuildAction implements Action, StaplerProxy, ModelObject{
 		        return null;
 		    }
 	    }catch( java.lang.InterruptedException ie ){
-			System.err.println( ie );
+	    	LOGGER.log(FINEST, "", ie);
 			return null;
 		}catch( IOException ioe ){
-			System.err.println( ioe );
+			LOGGER.log(FINEST, "", ioe);
 			return null;
 		}
 	}
@@ -135,7 +135,7 @@ public class ClangScanBuildAction implements Action, StaplerProxy, ModelObject{
     	if( requestedPath == null ) rsp.sendError( 404 );
     
     	if( !APPROVED_REPORT_REQUEST_PATTERN.matcher( requestedPath ).matches() ){
-    		System.err.println( "Someone is requesting unapproved content: " + requestedPath );
+    		LOGGER.log(FINEST, "Someone is requesting unapproved content: %s", requestedPath);
     		rsp.sendError( 404 );
     		return;
     	}
@@ -145,13 +145,13 @@ public class ClangScanBuildAction implements Action, StaplerProxy, ModelObject{
     	
     	try{
 	    	if( !requestedFile.exists() ){
-	    		System.err.println( "Unable to locate report: " + req.getRestOfPath() );
+	    		LOGGER.log(FINEST, "Unable to locate report: %s", req.getRestOfPath());
 	    		rsp.sendError( 404 );
 	    		return;
 	    	}
 	    	rsp.serveFile( req, requestedFile.toURI().toURL() );
     	}catch( Exception e ){
-    		System.err.println( "FAILED TO SERVE FILE: " + req.getRestOfPath() + " -> " + e.getLocalizedMessage() );
+    		LOGGER.log(FINEST, "FAILED TO SERVE FILE: %s -> %s", new Object[]{req.getRestOfPath(), e.getLocalizedMessage()});
     		rsp.sendError( 500 );
     	}
 
