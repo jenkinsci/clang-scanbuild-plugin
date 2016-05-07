@@ -1,10 +1,15 @@
 plugins {
   id 'org.jenkins-ci.jpi' version '0.17.0'
+  id 'com.github.hierynomus.license' version '0.12.1'
 }
 
 group = 'org.jenkins-ci.plugins'
 version = '1.8-SNAPSHOT'
 description = 'Provides an easy way to execute and report Clang scan-build errors using jenkins'
+
+license {
+    header = file('LICENSE.mit')
+}
 
 jenkinsPlugin {
     // version of Jenkins core this plugin depends on
