@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'org.jenkins-ci.plugins'
-version = '1.8-SNAPSHOT'
+version = '1.8'
 description = 'Provides an easy way to execute and report Clang scan-build errors using jenkins'
 
 license {
