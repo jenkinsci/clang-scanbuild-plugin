@@ -6,3 +6,7 @@ Provides a simple way to execute the Clang scan-build tool against an XCode proj
 
 For more information, visit the wiki page:  
 <http://wiki.jenkins-ci.org/display/JENKINS/Clang+Scan-Build+Plugin>
+
+* This plugin requires gradle in order to build.  See:
+https://github.com/jenkinsci/gradle-jpi-plugin/#usage
+	

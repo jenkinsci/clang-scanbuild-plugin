@@ -1,0 +1,38 @@
+plugins {
+  id 'org.jenkins-ci.jpi' version '0.17.0'
+}
+
+group = 'org.jenkins-ci.plugins'
+version = '1.8-SNAPSHOT'
+description = 'Provides an easy way to execute and report Clang scan-build errors using jenkins'
+
+jenkinsPlugin {
+    // version of Jenkins core this plugin depends on
+    coreVersion = '1.609.3'
+
+    shortName = 'clang-scanbuild'
+    displayName = 'Clang Scan-Build Plugin'
+    url = 'https://wiki.jenkins-ci.org/display/JENKINS/Clang+Scan-Build+Plugin'
+    gitHubUrl = 'https://github.com/jenkinsci/clang-scanbuild-plugin.git'
+    fileExtension = 'jpi'
+
+    // the developers section is optional, and corresponds to the POM developers section
+    developers {
+        developer {
+            id 'jkennedy1980'
+            name 'Joshua Kennedy'
+            email 'josh@ponycode.com'
+        }
+        developer {
+            id 'rodrigc'
+            name 'Craig Rodrigues'
+            email 'rodrigc@FreeBSD.org'
+        }
+    }                           
+}
+
+dependencies {
+    jenkinsTest 'org.jenkins-ci.plugins:matrix-project:1.6@jar'
+}
+
+defaultTasks 'jpi', 'test'
