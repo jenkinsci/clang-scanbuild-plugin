@@ -125,7 +125,10 @@ public class ClangScanBuildPublisher extends Recorder{
 	}
 
 	public String getClangexcludedpaths(){
-		return clangexcludedpaths;
+		if (clangexcludedpaths != null) {
+			return clangexcludedpaths;
+		}
+		return "";
 	}
 
 	@Override
