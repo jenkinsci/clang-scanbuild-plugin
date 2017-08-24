@@ -34,6 +34,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
+import jenkins.model.Jenkins;
 import jenkins.plugins.clangscanbuild.actions.ClangScanBuildAction;
 
 import org.jfree.chart.ChartFactory;
@@ -151,7 +152,7 @@ public class ClangBuildGraph extends Graph{
 		public String generateURL( CategoryDataset dataset, int series, int category ){
 			GraphPoint point = reversedPoints.get( category );
 			if( point == null ) return "";
-			return "/" + point.getRun().getUrl() + "/" + ClangScanBuildAction.BUILD_ACTION_URL_NAME;
+			return Jenkins.getInstance().getRootUrl() + point.getRun().getUrl() + "/" + ClangScanBuildAction.BUILD_ACTION_URL_NAME;
 		}
 
 		@Override
