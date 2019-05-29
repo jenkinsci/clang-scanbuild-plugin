@@ -90,7 +90,7 @@ public class ScanBuildCommandTest{
 		context.log( (String) EasyMock.notNull() );
 		EasyMock.expectLastCall().anyTimes();
 		
-		Capture<ArgumentListBuilder> argumentListCapture = new Capture<ArgumentListBuilder>();
+		Capture<ArgumentListBuilder> argumentListCapture = EasyMock.newCapture();
 		EasyMock.expect( context.waitForProcess( EasyMock.same( command.getProjectDirectory() ), EasyMock.capture( argumentListCapture ) ) ).andReturn( 0 );
 		
 		EasyMock.replay( context );
