@@ -22,7 +22,7 @@
 package jenkins.plugins.clangscanbuild;
 
 import hudson.FilePath;
-import hudson.model.AbstractBuild;
+import hudson.model.Run;
 
 
 public class ClangScanBuildUtils{
@@ -37,7 +37,7 @@ public class ClangScanBuildUtils{
 		return "/plugin/" + SHORTNAME + "/transparent.png";
 	}
 	
-	public static FilePath locateClangScanBuildReportFolder( AbstractBuild<?,?> build, String folderName ){
+	public static FilePath locateClangScanBuildReportFolder(Run<?, ?> build, String folderName ){
 		if( build == null ) return null;
 		return new FilePath( new FilePath( build.getRootDir() ), folderName );
 	}

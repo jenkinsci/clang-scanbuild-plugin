@@ -26,11 +26,7 @@ import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.Util;
-import hudson.model.Action;
-import hudson.model.BuildListener;
-import hudson.model.Result;
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
+import hudson.model.*;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Recorder;
 
@@ -48,8 +44,12 @@ import jenkins.plugins.clangscanbuild.actions.ClangScanBuildAction;
 import jenkins.plugins.clangscanbuild.actions.ClangScanBuildProjectAction;
 import jenkins.plugins.clangscanbuild.history.ClangScanBuildBug;
 import jenkins.plugins.clangscanbuild.history.ClangScanBuildBugSummary;
+import jenkins.tasks.SimpleBuildStep;
+import org.kohsuke.stapler.DataBoundConstructor;
 
-public class ClangScanBuildPublisher extends Recorder{
+import javax.annotation.Nonnull;
+
+public class ClangScanBuildPublisher extends Recorder implements SimpleBuildStep {
 
 	private static final Logger LOGGER = Logger.getLogger( ClangScanBuildPublisher.class.getName() );
 
@@ -71,14 +71,13 @@ public class ClangScanBuildPublisher extends Recorder{
 
 	private boolean markBuildUnstableWhenThresholdIsExceeded;
 
+	@DataBoundConstructor
 	public ClangScanBuildPublisher( 
 			boolean markBuildUnstableWhenThresholdIsExceeded, 
 			int bugThreshold,
 			String clangexcludedpaths,
 			String reportFolderName
       ){
-
-		super();
 		this.markBuildUnstableWhenThresholdIsExceeded = markBuildUnstableWhenThresholdIsExceeded;
 		this.bugThreshold = bugThreshold;
 		this.clangexcludedpaths = Util.fixNull(clangexcludedpaths);
@@ -93,25 +92,16 @@ public class ClangScanBuildPublisher extends Recorder{
 		return markBuildUnstableWhenThresholdIsExceeded;
 	}
 
-	public void setBugThreshold(int bugThreshold) {
-		this.bugThreshold = bugThreshold;
-	}
-
-	public void setClangexcludedpaths(String clangExcludePaths){
-		this.clangexcludedpaths = Util.fixNull(clangExcludePaths);
-	}
-
-	public void setReportFolderName(String folderName){
-		this.reportFolderName = Util.fixNull(folderName);
-	}
-
 	public String getReportFolderName(){
 		return reportFolderName;
 	}
 
-
+	public String getClangexcludedpaths(){
+		return clangexcludedpaths;
+	}
+	
 	@Override
-	public Action getProjectAction( AbstractProject<?, ?> project ){
+	public Action getProjectAction(AbstractProject<?, ?> project ){
 		return new ClangScanBuildProjectAction( project );
 	}
 
@@ -121,23 +111,25 @@ public class ClangScanBuildPublisher extends Recorder{
 	}
 
 	public BuildStepMonitor getRequiredMonitorService() {
-		return BuildStepMonitor.NONE;
-	}
-
-	public String getClangexcludedpaths(){
-		return clangexcludedpaths;
+		return BuildStepMonitor.BUILD;
 	}
 
 	@Override
-	public boolean perform( AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener ) throws InterruptedException, IOException {
-
+	public void perform(@Nonnull Run<?, ?> build, @Nonnull FilePath workspace, @Nonnull Launcher launcher,
+						@Nonnull TaskListener listener) throws InterruptedException, IOException {
 		listener.getLogger().println( "Publishing Clang scan-build results" );
 
 		// Expand build variables in the reportFolderName
-		EnvVars env = build.getEnvironment(listener);
+		EnvVars env;
+		if (build instanceof AbstractBuild) {
+			env = build.getEnvironment(listener);
+			env.overrideAll(((AbstractBuild<?,?>) build).getBuildVariables());
+		} else {
+			env = new EnvVars();
+		}
 		String expandedReportFolderName = env.expand(reportFolderName);
 
-		FilePath reportOutputFolder = new FilePath(build.getWorkspace(), expandedReportFolderName); 
+		FilePath reportOutputFolder = new FilePath(workspace, expandedReportFolderName);
 		FilePath reportMasterOutputFolder = ClangScanBuildUtils.locateClangScanBuildReportFolder(build, expandedReportFolderName);
 
 		// This copies the reports out of the generate date sub folder to the root of the reports folder and then deletes the clang generated folder
@@ -155,27 +147,27 @@ public class ClangScanBuildPublisher extends Recorder{
 		// this builds and new bug summary and populates it with bugs
 		ClangScanBuildBugSummary newBugSummary = new ClangScanBuildBugSummary( build.number );
 
-	String[] tokens = new String[0];
-	if(this.getClangexcludedpaths().length() > 0){
-	  tokens = this.getClangexcludedpaths().split(",");
-	}
-
-	for( FilePath report : clangReports ){
-	  // bugs are parsed inside this method:
-	  ClangScanBuildBug bug = createBugFromClangScanBuildHtml( build.getProject().getName(), report, previousBugSummary, build.getWorkspace().getRemote() );
-	  boolean validBug = true;
-	  for(String token:tokens){
-		String trimmedToken = token.trim().toLowerCase();
-		if(bug.sourceFile.toLowerCase().contains(trimmedToken)){
-			listener.getLogger().println( "Skipping file: " + bug.sourceFile + " because it matches exclusion pattern: " + trimmedToken );
-			validBug = false;
-			break;
+		String[] tokens = new String[0];
+		if(getClangexcludedpaths().length() > 0){
+			tokens = getClangexcludedpaths().split(",");
 		}
-	  }
-	  if(validBug) {
-		newBugSummary.add( bug );
-	  }
-	}
+
+		for( FilePath report : clangReports ){
+			// bugs are parsed inside this method:
+			ClangScanBuildBug bug = createBugFromClangScanBuildHtml( build.getParent().getName(), report, previousBugSummary, workspace.getRemote() );
+			boolean validBug = true;
+			for(String token:tokens){
+				String trimmedToken = token.trim().toLowerCase();
+				if(bug.sourceFile.toLowerCase().contains(trimmedToken)){
+					listener.getLogger().println( "Skipping file: " + bug.sourceFile + " because it matches exclusion pattern: " + trimmedToken );
+					validBug = false;
+					break;
+				}
+			}
+			if(validBug) {
+				newBugSummary.add( bug );
+			}
+		}
 
 		// this line dumps a bugSummary.xml file to the build artifacts.  did this instead of using job config xml for performance
 		//FilePath bugSummaryXMLFile = new FilePath( reportOutputFolder, "bugSummary.xml" );
@@ -192,8 +184,6 @@ public class ClangScanBuildPublisher extends Recorder{
         	listener.getLogger().println( "Clang scan-build threshhold exceeded." );
             build.setResult( Result.UNSTABLE );
         }
-
-		return true;
 	}
 
 	private ClangScanBuildBug createBugFromClangScanBuildHtml( String projectName, FilePath report, ClangScanBuildBugSummary previousBugSummary, String workspacePath ) throws InterruptedException {
@@ -207,7 +197,7 @@ public class ClangScanBuildPublisher extends Recorder{
 		return bug;
 	}
 
-	private ClangScanBuildBugSummary getBugSummaryForLastBuild( AbstractBuild<?, ?> build) {
+	private ClangScanBuildBugSummary getBugSummaryForLastBuild(Run<?, ?> build) {
 		if( build.getPreviousBuild() != null ){
 			ClangScanBuildAction previousAction = build.getPreviousBuild().getAction( ClangScanBuildAction.class );
 			if( previousAction != null ){
@@ -230,7 +220,7 @@ public class ClangScanBuildPublisher extends Recorder{
 	 * This method locates the subfolders of the output folder and copies their contents
 	 * to the build archive folder.
 	 */
-	private void copyClangReportsOutOfGeneratedSubFolder( FilePath reportsFolder, BuildListener listener ){
+	private void copyClangReportsOutOfGeneratedSubFolder(FilePath reportsFolder, TaskListener listener ){
 		try{
 			List<FilePath> subFolders = reportsFolder.listDirectories();
 			if( subFolders.isEmpty() ){
@@ -249,7 +239,7 @@ public class ClangScanBuildPublisher extends Recorder{
 	/**
 	 * Copy clang output folder to have access to html files from the master
 	 */
-	private void copyClangReportsToMaster( FilePath reportsFolder, FilePath materPath, BuildListener listener ){
+	private void copyClangReportsToMaster(FilePath reportsFolder, FilePath materPath, TaskListener listener ){
 		try{
 			reportsFolder.copyRecursiveTo( materPath );
 		}catch( Exception e ){
@@ -318,11 +308,10 @@ public class ClangScanBuildPublisher extends Recorder{
 	/**
 	 * This locates all the generated HTML bug reports from scan-build and returns them as a list.
 	 */
-	protected List<FilePath> locateClangBugReports( FilePath clangOutputFolder ) throws IOException, InterruptedException {
+	private List<FilePath> locateClangBugReports( FilePath clangOutputFolder ) throws IOException, InterruptedException {
 		List<FilePath> files = new ArrayList<FilePath>();
 		if( !clangOutputFolder.exists() ) return files;
         files.addAll( Arrays.asList( clangOutputFolder.list( "**/report-*.html" ) ) );
         return files;
 	}
-
 }

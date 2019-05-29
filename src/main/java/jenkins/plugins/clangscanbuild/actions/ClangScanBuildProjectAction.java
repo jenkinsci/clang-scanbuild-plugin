@@ -23,6 +23,7 @@ package jenkins.plugins.clangscanbuild.actions;
 
 import hudson.model.Action;
 import hudson.model.AbstractProject;
+import hudson.model.Job;
 import hudson.util.ChartUtil;
 
 import java.io.IOException;
@@ -47,24 +48,17 @@ import org.kohsuke.stapler.StaplerResponse;
 public class ClangScanBuildProjectAction implements Action{
 
 	private static final String DEFAULT_IMAGE = "/images/headless.png";
-	public final AbstractProject<?,?> project;
 	private ClangScanBuildHistoryGatherer gatherer = new ClangScanBuildHistoryGathererImpl();
-	
-	public ClangScanBuildProjectAction( AbstractProject<?,?> project ) {
-		super();
+
+	public final Job<?,?> project;
+
+	public ClangScanBuildProjectAction(Job<?,?> project ) {
 		this.project = project;
 	}
 	  
 	@Override
 	public String getIconFileName() {
 		return ClangScanBuildUtils.getIconsPath() + "scanbuild-32x32.png";
-	}
-	
-	/**
-	 * Doing this wastefully because i do not know the lifecycle of this object.  Is it a singleton?
-	 */
-	public ClangBuildGraph getGraph(){
-		return new ClangBuildGraph( gatherer.gatherHistoryDataSet( project.getLastBuild() ) );
 	}
 
 	@Override
@@ -75,6 +69,17 @@ public class ClangScanBuildProjectAction implements Action{
 	@Override
 	public String getUrlName() {
 		return "clangScanBuildTrend";
+	}
+
+	public Job<?, ?> getProject() {
+		return project;
+	}
+
+	/**
+	 * Doing this wastefully because i do not know the lifecycle of this object.  Is it a singleton?
+	 */
+	public ClangBuildGraph getGraph(){
+		return new ClangBuildGraph( gatherer.gatherHistoryDataSet( project.getLastBuild() ) );
 	}
 
     public void doGraph( StaplerRequest req, StaplerResponse rsp ) throws IOException {
@@ -90,9 +95,8 @@ public class ClangScanBuildProjectAction implements Action{
     	getGraph().doMap( req, rsp );
     }
     
-    public boolean buildDataExists(){
-    	List<GraphPoint> points = gatherer.gatherHistoryDataSet( project.getLastBuild() );
-    	return points.size() > 0;
-    }
-    
+    public boolean buildDataExists() {
+		List<GraphPoint> points = gatherer.gatherHistoryDataSet(project.getLastBuild());
+		return points.size() > 0;
+	}
 }

@@ -1,6 +1,6 @@
 plugins {
-  id 'org.jenkins-ci.jpi' version '0.32.0'
-  id 'com.github.hierynomus.license' version '0.12.1'
+    id 'org.jenkins-ci.jpi' version '0.32.0'
+    id 'com.github.hierynomus.license' version '0.12.1'
 }
 
 group = 'org.jenkins-ci.plugins'
@@ -9,6 +9,10 @@ description = 'Provides an easy way to execute and report Clang scan-build error
 
 license {
     header = file('LICENSE.mit')
+}
+
+repositories {
+    mavenCentral()
 }
 
 jenkinsPlugin {
@@ -38,8 +42,12 @@ jenkinsPlugin {
 
 dependencies {
     testCompile group: 'org.easymock', name: 'easymock', version: '4.0.2'
-    compile group: 'org.jenkins-ci.plugins', name: 'matrix-project', version: '1.14'
-    compile group: 'org.jenkins-ci.plugins.workflow', name: 'workflow-step-api', version: '2.13'
+    compile group: 'org.jenkins-ci.plugins.workflow', name: 'workflow-step-api', version: '2.19'
+
+//    compile group: 'org.jenkins-ci.plugins', name: 'matrix-project', version: '1.14'
+    jenkinsPlugins group: 'org.jenkins-ci.plugins.workflow', name: 'workflow-cps', version: '2.68'
+    jenkinsPlugins group: 'org.jenkins-ci.plugins.workflow', name: 'workflow-job', version: '2.32'
+    jenkinsPlugins group: 'org.jenkins-ci.plugins.workflow', name: 'workflow-step-api', version: '2.19'
 }
 
 defaultTasks 'jpi', 'test'
