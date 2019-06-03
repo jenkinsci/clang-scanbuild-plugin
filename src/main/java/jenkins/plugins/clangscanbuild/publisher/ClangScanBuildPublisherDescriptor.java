@@ -21,16 +21,19 @@
  */
 package jenkins.plugins.clangscanbuild.publisher;
 
+import hudson.Extension;
 import jenkins.plugins.clangscanbuild.ClangScanBuildUtils;
 import net.sf.json.JSONObject;
 
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.StaplerRequest;
 
 import hudson.model.AbstractProject;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Publisher;
 
-
+@Symbol("publishClangScanBuildResult")
+@Extension
 public class ClangScanBuildPublisherDescriptor extends BuildStepDescriptor<Publisher>{
 
 	public ClangScanBuildPublisherDescriptor(){
